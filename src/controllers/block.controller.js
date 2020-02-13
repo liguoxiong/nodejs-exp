@@ -3,7 +3,7 @@ import v from "voca";
 
 const createBlock = async (req, res) => {
   const {
-    body: { name, address, description, },
+    body: { name, address, description, location, },
     user
   } = req;
   try {
@@ -20,6 +20,7 @@ const createBlock = async (req, res) => {
         ward,
         street: street.join(" "),
         number,
+        location,
       },
       description,
       price,
