@@ -23,8 +23,6 @@ services:
       - db
     ports:
       - "5000:5000"
-    networks:
-      - webappnetwork
     volumes:
       - .:/home/node/app
       - /home/node/app/node_modules
@@ -44,8 +42,6 @@ services:
     command: mongod
     ports:
       - "27017:27017"
-    networks:
-      - webappnetwork
 
 volumes:
   node_modules:
@@ -54,5 +50,3 @@ networks:
   default:
     external:
       name: nginx-proxy
-  webappnetwork:
-    driver: bridge
