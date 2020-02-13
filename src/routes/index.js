@@ -6,7 +6,7 @@ import userRoute from "./user.route";
 const router = Router();
 
 router.use("/apartments", apartmentRoute);
-router.use("/blocks", blockRoute);
 router.use("/user", userRoute);
+router.use("/blocks", blockRoute);
 
 export default router;
