@@ -24,8 +24,8 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - .:/home/node/app
-      - /home/node/app/node_modules
+      - .:/app/
+      - /app/node_modules
     expose:
       - 5000
     command: npm run start
