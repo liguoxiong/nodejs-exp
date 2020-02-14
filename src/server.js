@@ -14,6 +14,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 
 app.use("/api/v1", routes);
+app.use("/api/v2", (req, res) => res.send("it works!"));
 // app.use("/", (req, res) =>
 //   res.sendFile(path.join(__dirname + "/buildClient/index.html"))
 // );
