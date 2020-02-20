@@ -26,11 +26,10 @@ const ApartmentSchema = new mongoose.Schema(
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
 );
 
-Apartment.pre('save', function(next) {
+ApartmentSchema.pre('save', function(next) {
   this.slug = v.slugify(this.name);
   next();
 });
-
 const Apartment = mongoose.model("Apartment", ApartmentSchema);
 
 export default Apartment;

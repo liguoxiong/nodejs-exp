@@ -43,12 +43,12 @@ const BlockSchema = new mongoose.Schema(
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
 );
 
-Block.pre('save', function(next) {
+BlockSchema.pre('save', function(next) {
   this.slug = v.slugify(this.name);
   next();
 });
 
-Block.pre('save', async function(next) {
+BlockSchema.pre('save', async function(next) {
   const loc = await geocoder.geocode(this.address);
   this.location = {
     type: 'Point',
