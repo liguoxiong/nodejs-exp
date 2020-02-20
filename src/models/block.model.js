@@ -17,6 +17,7 @@ const BlockSchema = new mongoose.Schema(
     thumb: String,
     bonusInfo: [{ name: String, content: String }],
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    config: { type: mongoose.Schema.Types.ObjectId, ref: "ApartmentConfig" },
     address: {
       type: String,
       required: [true, 'Please add an address']
