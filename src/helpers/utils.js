@@ -11,7 +11,8 @@ const geocoderOptions = {
   apiKey: process.env.GEOCODER_API_KEY,
   formatter: null,
   language: 'VI',
-  country: 'Vietnam'
+  country: 'Vietnam',
+  production: process.env.NODE_ENV === 'production'
 };
 
 export const geocoder = NodeGeocoder(geocoderOptions);
