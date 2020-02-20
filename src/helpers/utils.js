@@ -1,11 +1,14 @@
 import NodeGeocoder from 'node-geocoder'
+require("dotenv").config();
+
 
 export const asyncCatchError = fn =>  (req, res, next) => {
     fn(req, res, next).catch(next);
 };
 
 const geocoderOptions = {
-  appCode: process.env.GEOCODER_APPID,
+  appID: process.env.GEOCODER_APPID,
+  appCode: process.env.GEOCODER_APPCODE,
   provider: process.env.GEOCODER_PROVIDER,
   httpAdapter: 'https',
   apiKey: process.env.GEOCODER_API_KEY,
@@ -14,5 +17,7 @@ const geocoderOptions = {
   country: 'Vietnam',
   production: process.env.NODE_ENV === 'production'
 };
+
+console.log(geocoderOptions);
 
 export const geocoder = NodeGeocoder(geocoderOptions);
