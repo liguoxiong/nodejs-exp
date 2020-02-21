@@ -8,7 +8,7 @@ export const asyncCatchError = fn =>  (req, res, next) => {
 
 const geocoderOptions = {
   appId: process.env.GEOCODER_APPID,
-  appCode: process.env.GEOCODER_APPCODE,
+  // appCode: process.env.GEOCODER_APPCODE,
   provider: process.env.GEOCODER_PROVIDER,
   httpAdapter: 'https',
   apiKey: process.env.GEOCODER_API_KEY,
