@@ -2,7 +2,11 @@ import NodeGeocoder from "node-geocoder";
 require("dotenv").config();
 
 export const asyncCatchError = fn => (req, res, next) => {
-  fn(req, res, next).catch(next);
+  try {
+    fn(req, res, next);
+  } catch (err) {
+    next(err);
+  }
 };
 
 const geocoderOptions = {
