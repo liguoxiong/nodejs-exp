@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
 import v from "voca";
-import { geocoder } from '../helpers/utils';
+import { geocoder } from "../helpers/utils";
 
 const BlockSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Please add a name'],
+      required: [true, "Please add a name"],
       unique: true,
       trim: true,
-      maxlength: [250, 'Name can not be more than 250 characters']
+      maxlength: [250, "Name can not be more than 250 characters"]
     },
     slug: String,
     description: String,
@@ -20,17 +20,17 @@ const BlockSchema = new mongoose.Schema(
     config: { type: mongoose.Schema.Types.ObjectId, ref: "ApartmentConfig" },
     address: {
       type: String,
-      required: [true, 'Please add an address']
+      required: [true, "Please add an address"]
     },
     location: {
       // GeoJSON Point
       type: {
         type: String,
-        enum: ['Point']
+        enum: ["Point"]
       },
       coordinates: {
         type: [Number],
-        index: '2dsphere'
+        index: "2dsphere"
       },
       formattedAddress: String,
       street: String,
@@ -38,20 +38,20 @@ const BlockSchema = new mongoose.Schema(
       state: String,
       zipcode: String,
       country: String
-    },
+    }
   },
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
 );
 
-BlockSchema.pre('save', function(next) {
+BlockSchema.pre("save", function(next) {
   this.slug = v.slugify(this.name);
   next();
 });
 
-BlockSchema.pre('save', async function(next) {
+BlockSchema.pre("save", async function(next) {
   const loc = await geocoder.geocode(this.address);
   this.location = {
-    type: 'Point',
+    type: "Point",
     coordinates: [loc[0].longitude, loc[0].latitude],
     formattedAddress: loc[0].formattedAddress,
     street: loc[0].streetName,

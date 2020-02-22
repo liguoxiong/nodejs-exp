@@ -2243,10 +2243,9 @@ node-abi@^2.7.0:
   dependencies:
     semver "^5.4.1"
 
-node-geocoder@^3.25.0:
+"node-geocoder@git+https://git@github.com/lequochungs/node-geocoder.git":
   version "3.25.0"
-  resolved "https://registry.yarnpkg.com/node-geocoder/-/node-geocoder-3.25.0.tgz#60190368afb70e9799ab33a758152f4dd8953ccd"
-  integrity sha512-l78F4XGnlylSboPU0XssHw/nZwvzhoEJYQyMkvR3PnvPXHCIJgIRzCdxlxte2c6Yi+s6dFPviHQy7Z5zGjWvnQ==
+  resolved "git+https://git@github.com/lequochungs/node-geocoder.git#2dcb15064cf0586baeb55e7332087ce73ab53fa5"
   dependencies:
     bluebird "^3.5.2"
     request "^2.88.0"

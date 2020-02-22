@@ -5,10 +5,10 @@ const ApartmentSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Please add a name'],
+      required: [true, "Please add a name"],
       unique: true,
       trim: true,
-      maxlength: [50, 'Name can not be more than 50 characters']
+      maxlength: [50, "Name can not be more than 50 characters"]
     },
     slug: String,
     description: String,
@@ -26,7 +26,7 @@ const ApartmentSchema = new mongoose.Schema(
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
 );
 
-ApartmentSchema.pre('save', function(next) {
+ApartmentSchema.pre("save", function(next) {
   this.slug = v.slugify(this.name);
   next();
 });
