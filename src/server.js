@@ -11,7 +11,18 @@ require("dotenv").config();
 const app = express();
 
 const router = Router();
-app.use(cors());
+const corsOptions = {
+  origin: [
+    "http://localhost",
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://quanly.homaitech.com"
+  ],
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
+  exposedHeaders: ["Content-Range", "X-Content-Range", "x-auth-token"]
+};
+app.use(cors(corsOptions));
 connectToDB();
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
