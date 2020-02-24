@@ -39,4 +39,8 @@ const createApartment = async (req, res) => {
   }
 };
 
-export default { createApartment };
+const getAllApartment = asyncCatchError(async (req, res) => {
+  res.status(200).json(res.getResults);
+});
+
+export default { createApartment, getAllApartment };
