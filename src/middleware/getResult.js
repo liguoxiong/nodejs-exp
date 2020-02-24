@@ -12,7 +12,7 @@ const getResult = (model, populate) => async (req, res, next) => {
 
   // Create query string
   let queryStr = JSON.stringify(reqQuery);
-
+  console.log(queryStr);
   // Create operators ($gt, $gte, etc)
   queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 

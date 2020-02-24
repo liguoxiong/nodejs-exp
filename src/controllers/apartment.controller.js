@@ -1,43 +1,21 @@
-import { ApartmentModel } from "../models";
-import v from "voca";
+import { ApartmentModel, BlockModel } from "../models";
+import NewError from "../helpers/NewError";
+import { asyncCatchError } from "../helpers/utils";
 
-const createApartment = async (req, res) => {
-  const {
-    body: { name, address, location, description, price },
-    user
-  } = req;
-  try {
-    const slug = v.slugify(name);
-    const [numberAndStreet, ward, district, province] = address.split(", ");
-    const [number, ...street] = numberAndStreet.split(" ");
-    const apartment = new ApartmentModel({
-      name,
-      slug,
-      address: {
-        addressFormated: address,
-        province,
-        district,
-        ward,
-        street: street.join(" "),
-        number,
-        location
-      },
-      description,
-      price,
-      user: user._id
-    });
-    await apartment.save();
-    res.status(201).json({
-      success: true,
-      message: "Create Apartment successfull"
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message
-    });
+const createApartment = asyncCatchError(async (req, res) => {
+  req.body.user = req.user._id;
+  const block = await BlockModel.findOne({slug: req.body.block})
+  if (!block) {
+    return new NewError("Block not exist", 400);
   }
-};
+  req.body.block = block._id
+  const apartment = await ApartmentModel.create(req.body);
+
+  res.status(201).json({
+    status: "success",
+    data: apartment
+  });
+});
 
 const getAllApartment = asyncCatchError(async (req, res) => {
   res.status(200).json(res.getResults);
