@@ -1,16 +1,19 @@
 import mongoose from "mongoose";
 import v from "voca";
+import { genUniqueCode } from "../helpers/utils";
 
 const ApartmentSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: [true, "Please add a name"],
-      unique: true,
       trim: true,
       maxlength: [50, "Name can not be more than 50 characters"]
     },
-    slug: String,
+    slug: {
+      type: String,
+      unique: true,
+    },
     description: String,
     images: [{ name: String, uri: String }],
     thumb: String,
@@ -27,7 +30,7 @@ const ApartmentSchema = new mongoose.Schema(
 );
 
 ApartmentSchema.pre("save", function(next) {
-  this.slug = v.slugify(this.name);
+  this.slug = `${v.slugify(this.name)}-${genUniqueCode()}`;
   next();
 });
 const Apartment = mongoose.model("Apartment", ApartmentSchema);

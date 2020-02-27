@@ -7,6 +7,6 @@ const router = Router();
 
 // ===== APARTMENT =====//
 router.post("/create", auth, apartmentController.createApartment);
-router.get("/", auth, slugToObjectId(BlockModel, 'stock'), getResult(ApartmentModel), apartmentController.getAllApartment);
+router.get("/", auth, slugToObjectId(BlockModel, 'block'), getResult(ApartmentModel), apartmentController.getAllApartment);
 
 export default router;

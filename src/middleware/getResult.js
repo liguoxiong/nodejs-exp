@@ -1,4 +1,6 @@
-const getResult = (model, populate) => async (req, res, next) => {
+import { asyncCatchError } from "../helpers/utils";
+
+const getResult = (model, populate) => asyncCatchError(async (req, res, next) => {
   let query;
 
   // Copy req.query
@@ -74,6 +76,6 @@ const getResult = (model, populate) => async (req, res, next) => {
   };
 
   next();
-};
+});
 
 export default getResult;
