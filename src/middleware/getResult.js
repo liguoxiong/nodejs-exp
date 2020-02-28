@@ -14,7 +14,7 @@ const getResult = (model, populate) => asyncCatchError(async (req, res, next) =>
 
   // Create query string
   let queryStr = JSON.stringify(reqQuery);
-  console.log(queryStr);
+  // console.log(queryStr);
   // Create operators ($gt, $gte, etc)
   queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
