@@ -34,3 +34,8 @@ export const genUniqueCode = () => {
   const result = (newDate - startDate);
   return genSlug(result).join('');
 }
+
+export const succesResponseObj = data => ({
+  status: 'success',
+  data,
+})

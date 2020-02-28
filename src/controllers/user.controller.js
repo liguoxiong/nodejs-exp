@@ -2,23 +2,17 @@ import bcrypt from "bcrypt";
 import { check } from "express-validator";
 import _ from "lodash";
 import { UserModel } from "../models";
-import { asyncCatchError } from "../helpers/utils";
+import { asyncCatchError, succesResponseObj } from "../helpers/utils";
 import NewError from "../helpers/NewError";
 
 const getCurrentUser = asyncCatchError(async (req, res) => {
   const user = await UserModel.findById(req.user._id).select("-password");
-  res.status(200).json({
-    status: "success",
-    user
-  });
+  res.status(200).json(succesResponseObj(user));
 });
 
 const getAllUser = asyncCatchError(async (req, res) => {
   const users = await UserModel.find({}).select("-password");
-  res.status(200).json({
-    status: "success",
-    users
-  });
+  res.status(200).json(succesResponseObj(users));
 });
 
 const userRegister = asyncCatchError(async (req, res, next) => {
@@ -57,10 +51,7 @@ const userLogin = asyncCatchError(async (req, res, next) => {
   res
     .status(200)
     .header("x-auth-token", token)
-    .json({
-      status: "success",
-      user: _.omit(user._doc, "password")
-    });
+    .json(succesResponseObj(_.omit(user._doc, "password")));
 });
 
 const updateProfile = asyncCatchError(async (req, res) => {
@@ -91,7 +82,7 @@ const updateProfile = asyncCatchError(async (req, res) => {
     { $set: profile },
     { new: true }
   );
-  res.json({ status: "success", user: _.omit(user._doc, "password") });
+  res.status(200).json(succesResponseObj(_.omit(user._doc, "password")));;
 });
 
 const userLogout = (req, res) => {

@@ -8,11 +8,13 @@ const ApartmentConfigSchema = new mongoose.Schema({
     trim: true,
     maxlength: [50, "Name can not be more than 50 characters"]
   },
-  ePrice: String,
-  wPrice: String,
-  iPrice: String,
-  trashPrice: String
-});
+  price: Number,
+  typeOfMember: { type: mongoose.Schema.Types.ObjectId, ref: "Member" },
+  block: { type: mongoose.Schema.Types.ObjectId, ref: "Block" },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+},
+{ timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
+);
 
 const ApartmentConfig = mongoose.model(
   "ApartmentConfig",

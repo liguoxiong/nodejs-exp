@@ -5,8 +5,7 @@ import { ApartmentModel, BlockModel } from "../models";
 
 const router = Router();
 
-// ===== APARTMENT =====//
-router.post("/create", auth, apartmentController.createApartment);
+router.post("/create", auth, slugToObjectId(BlockModel, 'block'), apartmentController.createApartment);
 router.get("/", auth, slugToObjectId(BlockModel, 'block'), getResult(ApartmentModel), apartmentController.getAllApartment);
 
 export default router;

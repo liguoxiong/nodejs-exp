@@ -11,6 +11,13 @@ const slugToObjectId = (model, param) => asyncCatchError(async (req, res, next) 
     }
     req.query[param] = res._id
   }
+  if (req.body[param]) {
+    const res = await model.findOne({ slug: req.body[param]})
+    if (!res) {
+      return next(new NewError('Invalid Input', 400));
+    }
+    req.body[param] = res._id
+  }
   next();
 });
 

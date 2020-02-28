@@ -1,20 +1,11 @@
-import { ApartmentModel, BlockModel } from "../models";
-import NewError from "../helpers/NewError";
-import { asyncCatchError } from "../helpers/utils";
+import { ApartmentModel } from "../models";
+import { asyncCatchError, succesResponseObj } from "../helpers/utils";
 
 const createApartment = asyncCatchError(async (req, res, next) => {
   req.body.user = req.user._id;
-  const block = await BlockModel.findOne({slug: req.body.block})
-  if (!block) {
-    return next(new NewError("Block not exist", 400));
-  }
-  req.body.block = block._id
   const apartment = await ApartmentModel.create(req.body);
 
-  res.status(201).json({
-    status: "success",
-    data: apartment
-  });
+  res.status(201).json(succesResponseObj(apartment));
 });
 
 const getAllApartment = asyncCatchError(async (req, res) => {
