@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const MemberSchema = new mongoose.Schema(
+const IndexTypeSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -13,6 +13,6 @@ const MemberSchema = new mongoose.Schema(
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
 );
 
-const Member = mongoose.model("Member", MemberSchema);
+const IndexType = mongoose.model("IndexType", IndexTypeSchema);
 
-export default Member;
+export default IndexType;

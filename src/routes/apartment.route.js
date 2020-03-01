@@ -5,7 +5,19 @@ import { ApartmentModel, BlockModel } from "../models";
 
 const router = Router();
 
-router.post("/create", auth, slugToObjectId(BlockModel, 'block'), apartmentController.createApartment);
-router.get("/", auth, slugToObjectId(BlockModel, 'block'), getResult(ApartmentModel), apartmentController.getAllApartment);
+router.post(
+  "/create",
+  auth,
+  slugToObjectId(BlockModel, "block"),
+  apartmentController.createApartment
+);
+router.get(
+  "/",
+  auth,
+  slugToObjectId(BlockModel, "block"),
+  getResult(ApartmentModel),
+  apartmentController.getAllApartment
+);
+router.post("/checkIn/:id", auth, apartmentController.checkIn);
 
 export default router;
