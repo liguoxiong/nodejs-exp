@@ -19,5 +19,6 @@ router.get(
   apartmentController.getAllApartment
 );
 router.post("/checkIn/:id", auth, apartmentController.checkIn);
+router.get("/checkOut/:id", auth, apartmentController.checkOut);
 
 export default router;
