@@ -18,6 +18,12 @@ const BlockSchema = new mongoose.Schema(
     images: [{ name: String, uri: String }],
     thumb: String,
     bonusInfo: [{ name: String, content: String }],
+    pBike: Number,
+    pAutoBike: Number,
+    pTrash: {price: Number, per: {type: String, enum: ["unit", "person"]}},
+    pInternet: {price: Number, per: {type: String, enum: ["unit", "person"]}},
+    pElectric: {price: Number, per: {type: String, enum: ["unit", "person"]}},
+    pWater: {price: Number, per: {type: String, enum: ["unit", "person"]}},
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     config: { type: mongoose.Schema.Types.ObjectId, ref: "ApartmentConfig" },
     address: {

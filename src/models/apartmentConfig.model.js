@@ -9,7 +9,7 @@ const ApartmentConfigSchema = new mongoose.Schema({
     maxlength: [50, "Name can not be more than 50 characters"]
   },
   price: Number,
-  typeOfMember: { type: mongoose.Schema.Types.ObjectId, ref: "Member" },
+  per: {type: String, enum: ["unit", "person"]}, // unit theo phong, person theo dau nguoi
   block: { type: mongoose.Schema.Types.ObjectId, ref: "Block" },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 },

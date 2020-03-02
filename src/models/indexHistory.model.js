@@ -7,7 +7,10 @@ const IndexHistorySchema = new mongoose.Schema(
       required: true,
     },
     date: Date,
-    typeIndex: String,
+    typeIndex: {
+      type: String,
+      enum: ['CSD', 'CSN'],
+    },
     apartment: { type: mongoose.Schema.Types.ObjectId, ref: "Apartment" },
   },
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
