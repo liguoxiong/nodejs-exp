@@ -57,17 +57,38 @@ const checkOut = asyncCatchError(async (req, res, next) => {
 });
 
 const createBill = asyncCatchError(async (req, res, next) => {
-  if (req.params.id) {
+  const calTotalPay = (apartmentPay) => {
+    const totalE =
+      apartmentPay.pElectric.per === 'unit'
+        ? apartmentPay.pElectric.price * (apartmentPay.CSD.CSM - apartmentPay.CSD.CSC)
+        : apartmentPay.pElectric.price * apartmentPay.nPerson;
+    const totalW =
+      apartmentPay.pWater.per === 'unit'
+        ? apartmentPay.pWater.price * (apartmentPay.CSN.CSM - apartmentPay.CSN.CSC)
+        : apartmentPay.pWater.price * apartmentPay.nPerson;
+    const totalBike = apartmentPay.nBike * apartmentPay.pBike;
+    const totalAutoBike = apartmentPay.nAutoBike * apartmentPay.pAutoBike;
+    const totalTrash =
+      apartmentPay.pTrash.per === 'unit' ? apartmentPay.pTrash.price : apartmentPay.pTrash * apartmentPay.nPerson;
+    const totalI =
+      apartmentPay.pInternet.per === 'unit'
+        ? apartmentPay.pInternet.price
+        : apartmentPay.pInternet.price * apartmentPay.nPerson;
+    const total =
+    apartmentPay.price + totalE + totalW + totalBike + totalAutoBike + totalTrash + totalI;
+    return { ...apartmentPay, total}
+  }
+  if (req.query.apartment) {
     const apartment = await ApartmentModel.findById(req.params.id);
     if (!apartment) return next(NewError('apartment not found', 404));
     const eIndexHistory = await IndexHistoryModel.find({
-      apartment: req.params.id,
+      apartment: req.query.apartment,
       typeIndex: 'CSD',
     })
       .sort({ createdAt: -1 })
       .limit(2);
     const wIndexHistory = await IndexHistoryModel.find({
-      apartment: req.params.id,
+      apartment: req.query.apartment,
       typeIndex: 'CSN',
     })
       .sort({ createdAt: -1 })
@@ -87,28 +108,49 @@ const createBill = asyncCatchError(async (req, res, next) => {
       pBike: block.pBike,
       nAutoBike: apartment.nAutoBike,
       pAutoBike: block.pAutoBike,
-    };
-    const totalE =
-      block.pElectric.per === 'unit'
-        ? block.pElectric.price * (request.CSD.CSM - request.CSD.CSC)
-        : block.pElectric.price * request.nPerson;
-    const totalW =
-      block.pWater.per === 'unit'
-        ? block.pWater.price * (request.CSN.CSM - request.CSN.CSC)
-        : block.pWater.price * request.nPerson;
-    const totalBike = request.nBike * request.pBike;
-    const totalAutoBike = request.nAutoBike * request.pAutoBike;
-    const totalTrash =
-      block.pTrash.per === 'unit' ? block.pTrash.price : block.pTrash * request.nPerson;
-    const totalI =
-      block.pInternet.per === 'unit'
-        ? block.pInternet.price
-        : block.pInternet.price * request.nPerson;
-    request.total =
-      apartment.price + totalE + totalW + totalBike + totalAutoBike + totalTrash + totalI;
-    const paymentHistory = await PaymentHistoryModel.create(request);
-    return res.status(201).json(succesResponseObj(paymentHistory));
+    };  
+    const paymentHistory = await PaymentHistoryModel.create(calTotalPay(request));
+    return res.status(200).json(succesResponseObj(paymentHistory));
   }
+  if (req.query.block) {
+    const block = await BlockModel.findById(req.query.block);
+    if (!block) return next(NewError('block not found', 404));
+    const apartments = await ApartmentModel.find({block: req.query.block});
+    const eIndexHistory = await IndexHistoryModel.find({
+      apartment: req.query.block,
+      typeIndex: 'CSD',
+    })
+      .sort({ createdAt: -1 })
+    const wIndexHistory = await IndexHistoryModel.find({
+      apartment: req.query.block,
+      typeIndex: 'CSN',
+    })
+      .sort({ createdAt: -1 })
+    let request = [];
+    apartments.forEach(apartment => {
+      const eIndexHistoryFilter = eIndexHistory.filter(item => item.apartment === apartment._id)
+      const wIndexHistoryFilter = wIndexHistory.filter(item => item.apartment === apartment._id)
+      const elm = {
+        apartment: apartment._id,
+        unitPrice: apartment.price,
+        CSD: { CSM: eIndexHistoryFilter[0].index || 0, CSC: eIndexHistoryFilter[1].index || 0 },
+        CSN: { CSM: wIndexHistoryFilter[0].index || 0, CSC: wIndexHistoryFilter[1].index || 0 },
+        nPerson: apartment.nPerson,
+        pElectric: block.pElectric,
+        pWater: block.pWater,
+        pTrash: block.pTrash,
+        pInternet: block.pInternet,
+        nBike: apartment.nBike,
+        pBike: block.pBike,
+        nAutoBike: apartment.nAutoBike,
+        pAutoBike: block.pAutoBike,
+      }
+      request.push(calTotalPay(elm));
+    })
+    const paymentHistory = await PaymentHistoryModel.create(request);
+    return res.status(200).json(succesResponseObj(paymentHistory));
+  }
+  return next(NewError('invalid input', 400))
 });
 
 export default { createApartment, getAllApartment, checkIn, checkOut, createBill };
