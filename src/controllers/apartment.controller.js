@@ -96,6 +96,7 @@ const createBill = asyncCatchError(async (req, res, next) => {
     const block = await BlockModel.findById(apartment.block);
     const request = {
       apartment: apartment._id,
+      apartmentName: apartment.name,
       unitPrice: apartment.price,
       CSD: { CSM: eIndexHistory[0].index || 0, CSC: eIndexHistory[1].index || 0 },
       CSN: { CSM: wIndexHistory[0].index || 0, CSC: wIndexHistory[1].index || 0 },
@@ -132,6 +133,7 @@ const createBill = asyncCatchError(async (req, res, next) => {
       const wIndexHistoryFilter = wIndexHistory.filter(item => item.apartment === apartment._id)
       const elm = {
         apartment: apartment._id,
+        apartmentName: apartment.name,
         unitPrice: apartment.price,
         CSD: { CSM: eIndexHistoryFilter[0].index || 0, CSC: eIndexHistoryFilter[1].index || 0 },
         CSN: { CSM: wIndexHistoryFilter[0].index || 0, CSC: wIndexHistoryFilter[1].index || 0 },
