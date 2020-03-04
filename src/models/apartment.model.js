@@ -26,6 +26,8 @@ const ApartmentSchema = new mongoose.Schema(
     status: { type: Number, default: 0 },
     startDate: Date,
     endDate: Date,
+    CSD: { type: mongoose.Schema.Types.ObjectId, ref: "IndexHistory" },
+    CSN: { type: mongoose.Schema.Types.ObjectId, ref: "IndexHistory" },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     block: { type: mongoose.Schema.Types.ObjectId, ref: "Block" }
   },

@@ -15,7 +15,7 @@ router.get(
   "/",
   auth,
   slugToObjectId(BlockModel, "block"),
-  getResult(ApartmentModel),
+  getResult(ApartmentModel, ['CSD', 'CSN']),
   apartmentController.getAllApartment
 );
 router.post("/checkIn/:id", auth, apartmentController.checkIn);

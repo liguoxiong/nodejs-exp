@@ -16,7 +16,7 @@ const getAllApartment = asyncCatchError(async (req, res) => {
 const checkIn = asyncCatchError(async (req, res, next) => {
   let apartment = await ApartmentModel.findById(req.params.id);
   if (!apartment) return next(new NewError('apartment not found', 404));
-  const { cusName, cusAddress, nPerson, nBike, nAutoBike } = req.body;
+  const { cusName, cusAddress, nPerson, nBike, nAutoBike, startDate } = req.body;
   apartment = await ApartmentModel.findByIdAndUpdate(
     req.params.id,
     {
@@ -26,6 +26,7 @@ const checkIn = asyncCatchError(async (req, res, next) => {
       nPerson,
       nBike,
       nAutoBike,
+      startDate,
     },
     {
       new: true,
