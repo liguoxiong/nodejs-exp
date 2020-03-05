@@ -4,10 +4,10 @@ import { asyncCatchError, succesResponseObj } from "../helpers/utils";
 const createIndexHistory = asyncCatchError(async (req, res, next) => {
   const indexHistory = await IndexHistoryModel.create(req.body);
   if (req.body.typeIndex === 'CSD') {
-    ApartmentModel.findByIdAndUpdate({_id: req.body.apartment}, {CSD: indexHistory._id})
+    await ApartmentModel.findByIdAndUpdate({_id: req.body.apartment}, {CSD: indexHistory._id})
   }
   if (req.body.typeIndex === 'CSN') {
-    ApartmentModel.findByIdAndUpdate(req.body.apartment, {CSN: indexHistory._id})
+    await ApartmentModel.findByIdAndUpdate(req.body.apartment, {CSN: indexHistory._id})
   }
   res.status(201).json(succesResponseObj(indexHistory));
 });

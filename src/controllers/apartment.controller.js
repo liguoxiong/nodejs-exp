@@ -59,6 +59,7 @@ const checkOut = asyncCatchError(async (req, res, next) => {
 
 const createBill = asyncCatchError(async (req, res, next) => {
   const calTotalPay = (apartmentPay) => {
+    console.log(apartmentPay)
     const totalE =
       apartmentPay.pElectric.per === 'unit'
         ? apartmentPay.pElectric.price * (apartmentPay.CSD.CSM - apartmentPay.CSD.CSC)
@@ -75,8 +76,9 @@ const createBill = asyncCatchError(async (req, res, next) => {
       apartmentPay.pInternet.per === 'unit'
         ? apartmentPay.pInternet.price
         : apartmentPay.pInternet.price * apartmentPay.nPerson;
-    const total =
+    let total =
     apartmentPay.price + totalE + totalW + totalBike + totalAutoBike + totalTrash + totalI;
+    console.log(totalE, totalW, totalBike, totalAutoBike, totalI, totalTrash, apartmentPay.price)
     return { ...apartmentPay, total}
   }
   if (req.query.apartment) {
@@ -99,8 +101,8 @@ const createBill = asyncCatchError(async (req, res, next) => {
       apartment: apartment._id,
       apartmentName: apartment.name,
       unitPrice: apartment.price,
-      CSD: { CSM: eIndexHistory[0].index || 0, CSC: eIndexHistory[1].index || 0 },
-      CSN: { CSM: wIndexHistory[0].index || 0, CSC: wIndexHistory[1].index || 0 },
+      CSD: { CSM: eIndexHistory.length ? eIndexHistory[0].index : 0, CSC: eIndexHistory.length > 1 ? eIndexHistory[1].index : 0 },
+      CSN: { CSM: wIndexHistory.length ? wIndexHistory[0].index : 0, CSC: wIndexHistory.length > 1 ? wIndexHistory[1].index : 0 },
       nPerson: apartment.nPerson,
       pElectric: block.pElectric,
       pWater: block.pWater,
@@ -110,7 +112,7 @@ const createBill = asyncCatchError(async (req, res, next) => {
       pBike: block.pBike,
       nAutoBike: apartment.nAutoBike,
       pAutoBike: block.pAutoBike,
-    };  
+    };
     const paymentHistory = await PaymentHistoryModel.create(calTotalPay(request));
     return res.status(200).json(succesResponseObj(paymentHistory));
   }
@@ -136,8 +138,8 @@ const createBill = asyncCatchError(async (req, res, next) => {
         apartment: apartment._id,
         apartmentName: apartment.name,
         unitPrice: apartment.price,
-        CSD: { CSM: eIndexHistoryFilter[0].index || 0, CSC: eIndexHistoryFilter[1].index || 0 },
-        CSN: { CSM: wIndexHistoryFilter[0].index || 0, CSC: wIndexHistoryFilter[1].index || 0 },
+        CSD: { CSM: eIndexHistoryFilter.length ? eIndexHistoryFilter[0].index : 0, CSC: eIndexHistoryFilter.length > 1 ? eIndexHistoryFilter[1].index : 0 },
+        CSN: { CSM: wIndexHistoryFilter.length ? wIndexHistoryFilter[0].index : 0, CSC: wIndexHistoryFilter.length > 1 ? wIndexHistoryFilter[1].index : 0 },
         nPerson: apartment.nPerson,
         pElectric: block.pElectric,
         pWater: block.pWater,
