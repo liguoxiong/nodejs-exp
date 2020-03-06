@@ -1,5 +1,5 @@
 import { ApartmentModel, BlockModel, IndexHistoryModel, PaymentHistoryModel } from '../models';
-import { asyncCatchError, succesResponseObj } from '../helpers/utils';
+import { asyncCatchError, succesResponseObj, resultNumber } from '../helpers/utils';
 import NewError from '../helpers/NewError';
 
 const createApartment = asyncCatchError(async (req, res, next) => {
@@ -59,26 +59,25 @@ const checkOut = asyncCatchError(async (req, res, next) => {
 
 const createBill = asyncCatchError(async (req, res, next) => {
   const calTotalPay = (apartmentPay) => {
-    console.log(apartmentPay)
     const totalE =
-      apartmentPay.pElectric.per === 'unit'
+      resultNumber(apartmentPay.pElectric.per === 'unit'
         ? apartmentPay.pElectric.price * (apartmentPay.CSD.CSM - apartmentPay.CSD.CSC)
-        : apartmentPay.pElectric.price * apartmentPay.nPerson;
+        : apartmentPay.pElectric.price * apartmentPay.nPerson);
     const totalW =
-      apartmentPay.pWater.per === 'unit'
+      resultNumber(apartmentPay.pWater.per === 'unit'
         ? apartmentPay.pWater.price * (apartmentPay.CSN.CSM - apartmentPay.CSN.CSC)
-        : apartmentPay.pWater.price * apartmentPay.nPerson;
-    const totalBike = apartmentPay.nBike * apartmentPay.pBike;
-    const totalAutoBike = apartmentPay.nAutoBike * apartmentPay.pAutoBike;
+        : apartmentPay.pWater.price * apartmentPay.nPerson);
+    const totalBike = resultNumber(apartmentPay.nBike * apartmentPay.pBike);
+    const totalAutoBike = resultNumber(apartmentPay.nAutoBike * apartmentPay.pAutoBike);
     const totalTrash =
-      apartmentPay.pTrash.per === 'unit' ? apartmentPay.pTrash.price : apartmentPay.pTrash * apartmentPay.nPerson;
+      resultNumber(apartmentPay.pTrash.per === 'unit' ? apartmentPay.pTrash.price : apartmentPay.pTrash * apartmentPay.nPerson);
     const totalI =
-      apartmentPay.pInternet.per === 'unit'
+      resultNumber(apartmentPay.pInternet.per === 'unit'
         ? apartmentPay.pInternet.price
-        : apartmentPay.pInternet.price * apartmentPay.nPerson;
+        : apartmentPay.pInternet.price * apartmentPay.nPerson);
     let total =
-    apartmentPay.price + totalE + totalW + totalBike + totalAutoBike + totalTrash + totalI;
-    console.log(totalE, totalW, totalBike, totalAutoBike, totalI, totalTrash, apartmentPay.price)
+    resultNumber(apartmentPay.price) + totalE + totalW + totalBike + totalAutoBike + totalTrash + totalI;
+    // console.log(totalE, totalW, totalBike, totalAutoBike, totalI, totalTrash, apartmentPay.price)
     return { ...apartmentPay, total}
   }
   if (req.query.apartment) {
@@ -121,18 +120,20 @@ const createBill = asyncCatchError(async (req, res, next) => {
     if (!block) return next(NewError('block not found', 404));
     const apartments = await ApartmentModel.find({block: req.query.block});
     const eIndexHistory = await IndexHistoryModel.find({
-      apartment: req.query.block,
+      block: req.query.block,
       typeIndex: 'CSD',
     })
       .sort({ createdAt: -1 })
     const wIndexHistory = await IndexHistoryModel.find({
-      apartment: req.query.block,
+      block: req.query.block,
       typeIndex: 'CSN',
     })
       .sort({ createdAt: -1 })
     let request = [];
     apartments.forEach(apartment => {
-      const eIndexHistoryFilter = eIndexHistory.filter(item => item.apartment === apartment._id)
+      const eIndexHistoryFilter = eIndexHistory.filter(item => {
+        return item.apartment.toString() === apartment._id.toString()
+      })
       const wIndexHistoryFilter = wIndexHistory.filter(item => item.apartment === apartment._id)
       const elm = {
         apartment: apartment._id,

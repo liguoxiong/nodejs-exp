@@ -7,5 +7,6 @@ const router = Router();
 
 router.post("/create", auth, blockController.createBlock);
 router.get("/", auth, getResult(BlockModel), blockController.getAllBlock);
+router.get("/:slug", auth, blockController.getBlock);
 
 export default router;

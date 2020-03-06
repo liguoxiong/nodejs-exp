@@ -39,3 +39,5 @@ export const succesResponseObj = data => ({
   status: 'success',
   data,
 })
+
+export const resultNumber = value => (value ? value : 0)
