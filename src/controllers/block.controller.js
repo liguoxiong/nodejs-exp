@@ -14,8 +14,20 @@ const getAllBlock = asyncCatchError(async (req, res) => {
 });
 
 const getBlock = asyncCatchError(async (req, res) => {
-  const block = await BlockModel.findOne({slug: req.param.slug})
-  res.status(200).json(succesResponseObj(block))
-})
+  const block = await BlockModel.findOne({ slug: req.params.slug });
+  res.status(200).json(succesResponseObj(block));
+});
 
-export default { createBlock, getAllBlock, getBlock };
+const updateBlock = asyncCatchError(async (req, res) => {
+  const block = await BlockModel.findOneAndUpdate(
+    { slug: req.params.slug },
+    req.body,
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+  res.status(200).json(succesResponseObj(block));
+});
+
+export default { createBlock, getAllBlock, getBlock, updateBlock };
