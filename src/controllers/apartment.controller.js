@@ -123,6 +123,8 @@ const createBill = asyncCatchError(async (req, res, next) => {
   if (req.query.apartment) {
     const apartment = await ApartmentModel.findById(req.params.id);
     if (!apartment) return next(NewError("apartment not found", 404));
+    if (apartment.status === 0)
+      return next(NewError("apartment not for rent", 400));
     const eIndexHistory = await IndexHistoryModel.find({
       apartment: req.query.apartment,
       typeIndex: "CSD"
@@ -166,7 +168,10 @@ const createBill = asyncCatchError(async (req, res, next) => {
   if (req.query.block) {
     const block = await BlockModel.findById(req.query.block);
     if (!block) return next(NewError("block not found", 404));
-    const apartments = await ApartmentModel.find({ block: req.query.block });
+    const apartments = await ApartmentModel.find({
+      block: req.query.block,
+      status: 1
+    });
     const eIndexHistory = await IndexHistoryModel.find({
       block: req.query.block,
       typeIndex: "CSD"
