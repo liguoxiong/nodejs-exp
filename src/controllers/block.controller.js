@@ -30,4 +30,8 @@ const updateBlock = asyncCatchError(async (req, res) => {
   res.status(200).json(succesResponseObj(block));
 });
 
-export default { createBlock, getAllBlock, getBlock, updateBlock };
+const getAllPaymentHistory = asyncCatchError(async (req,res) => {
+  res.status(200).json(res.getResults);
+})
+
+export default { createBlock, getAllBlock, getBlock, updateBlock, getAllPaymentHistory };

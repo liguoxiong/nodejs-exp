@@ -5,7 +5,6 @@ const getResult = (model, populate) => asyncCatchError(async (req, res, next) =>
 
   // Copy req.query
   const reqQuery = { ...req.query };
-
   // Fields to exclude
   const removeFields = ["select", "sort", "page", "limit"];
 

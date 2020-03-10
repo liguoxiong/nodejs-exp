@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const PaymentHistorySchema = new mongoose.Schema(
   {
     apartment: { type: mongoose.Schema.Types.ObjectId, ref: "Apartment" },
+    block: { type: mongoose.Schema.Types.ObjectId, ref: "Block" },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     apartmentName: String,
     unitPrice: Number,
     CSD: {CSM: Number, CSC: Number},

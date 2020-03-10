@@ -140,6 +140,8 @@ const createBill = asyncCatchError(async (req, res, next) => {
     const block = await BlockModel.findById(apartment.block);
     const request = {
       apartment: apartment._id,
+      block: block._id,
+      user: block.user,
       apartmentName: apartment.name,
       unitPrice: apartment.price,
       CSD: {
@@ -190,6 +192,8 @@ const createBill = asyncCatchError(async (req, res, next) => {
       );
       const elm = {
         apartment: apartment._id,
+        block: block._id,
+        user: block.user,
         apartmentName: apartment.name,
         unitPrice: apartment.price,
         CSD: {
