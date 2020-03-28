@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+require("dotenv").config();
+
 
 const {
   MONGO_USERNAME,
@@ -6,10 +8,11 @@ const {
   MONGO_HOSTNAME,
   MONGO_PORT,
   MONGO_DB,
-  NODE_ENV
+  NODE_ENV,
+  MONGO_URL
 } = process.env;
 
-let url = `mongodb+srv://kunio:aABhe8fwaoRIobh0@lvprod-qorpe.mongodb.net/homaitech?retryWrites=true&w=majority`;
+let url = MONGO_URL;
 if (NODE_ENV === 'production') {
   url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
 }

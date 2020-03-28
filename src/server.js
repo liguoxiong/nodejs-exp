@@ -16,7 +16,6 @@ const corsOptions = {
     "http://localhost",
     "http://localhost:3000",
     "http://localhost:3001",
-    "https://quanly.homaitech.com"
   ],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],

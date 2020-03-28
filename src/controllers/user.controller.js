@@ -54,37 +54,6 @@ const userLogin = asyncCatchError(async (req, res, next) => {
     .json(succesResponseObj(_.omit(user._doc, "password")));
 });
 
-const updateProfile = asyncCatchError(async (req, res) => {
-  const {
-    phoneNumber,
-    province,
-    district,
-    ward,
-    add,
-    email,
-    fullName
-  } = req.body;
-  const profile = _.pickBy(
-    {
-      "profile.avatar": req.file ? req.file.filename : null,
-      "profile.phoneNumber": phoneNumber,
-      "profile.address.province": province,
-      "profile.address.district": district,
-      "profile.address.ward": ward,
-      "profile.address.add": add,
-      "profile.email": email,
-      "profile.fullName": fullName
-    },
-    _.identity
-  );
-  const user = await UserModel.findByIdAndUpdate(
-    req.user._id,
-    { $set: profile },
-    { new: true }
-  );
-  res.status(200).json(succesResponseObj(_.omit(user._doc, "password")));;
-});
-
 const userLogout = (req, res) => {
   res
     .status(200)
@@ -94,19 +63,6 @@ const userLogout = (req, res) => {
       message: "Logout successful"
     });
 };
-
-const setRole = asyncCatchError(async (req, res, next) => {
-  const { userId, role } = req.body;
-  const user = await UserModel.findById(userId);
-  if (!user) return next(new NewError("User not found!", 400));
-
-  user.role = role;
-  await user.save();
-  res.status(200).json({
-    status: "success",
-    message: "Update successfull"
-  });
-});
 
 const changePassword = asyncCatchError(async (req, res, next) => {
   const { currentPassword, newPassword } = req.body;
@@ -123,53 +79,11 @@ const changePassword = asyncCatchError(async (req, res, next) => {
   });
 });
 
-const validator = type => {
-  switch (type) {
-    case "register":
-      return [
-        check("userName").isLength({ min: 3, max: 50 }),
-        check("password").isLength({ min: 3, max: 255 }),
-        check(
-          "passwordConfirmation",
-          "passwordConfirmation field must have the same value as the password field"
-        )
-          .exists()
-          .custom((value, { req }) => value === req.body.password)
-      ];
-    case "login":
-      return [
-        check("userName").isLength({ min: 3, max: 50 }),
-        check("password").isLength({ min: 3, max: 255 })
-      ];
-    case "setRole":
-      return [
-        check("userId").exists(),
-        check("role").isInt({ min: 0, max: 3 })
-      ];
-    case "changePassword":
-      return [
-        check("currentPassword").isLength({ min: 3, max: 255 }),
-        check("newPassword").isLength({ min: 3, max: 255 }),
-        check(
-          "newPasswordConfirmation",
-          "passwordConfirmation field must have the same value as the password field"
-        )
-          .exists()
-          .custom((value, { req }) => value === req.body.newPassword)
-      ];
-    default:
-      return [];
-  }
-};
-
 export default {
   getCurrentUser,
   getAllUser,
   userRegister,
   userLogin,
   userLogout,
-  updateProfile,
-  setRole,
   changePassword,
-  validator
 };

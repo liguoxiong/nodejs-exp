@@ -10,27 +10,6 @@ const UserSchema = new mongoose.Schema(
       maxlength: 50,
       unique: true
     },
-    profile: {
-      avatar: {
-        type: String,
-        default: "default-avatar.jpg"
-      },
-      address: {
-        province: String,
-        district: String,
-        ward: String,
-        add: String
-      },
-      phoneNumber: {
-        type: String
-      },
-      fullName: {
-        type: String
-      },
-      email: {
-        type: String
-      }
-    },
     password: {
       type: String,
       required: true,
@@ -38,10 +17,6 @@ const UserSchema = new mongoose.Schema(
       maxlength: 255
     },
     // give different access rights if admin or not
-    role: {
-      type: Number,
-      default: 2 // 0 is root user
-    }
   },
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
 );
